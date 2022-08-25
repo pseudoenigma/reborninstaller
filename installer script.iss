@@ -45,20 +45,23 @@ Name: top\gserver\rc3; Description: "Remote Control 3, a GUI for remote dev/admi
 
 
 [Types]
-Name: "compact"; Description: "Compact installation"
-Name: "full"; Description: "Full installation"
-Name: "custom"; Description: "Custom installation"; Flags: iscustom
+Name: "compact"; Description: "Compact installation";
+Name: "full"; Description: "Full installation";
+Name: "custom"; Description: "Custom installation"; Flags: iscustom;
 
 
 [Tasks]
 Name: startmenu; Description: "Create shortcuts in the &Start Menu";
-Name: defaultsettings; Description: "Restore default game settings"; Flags: unchecked
+Name: desktop; Description: "Create a desktop shortcut"; Flags: unchecked;
+Name: defaultsettings; Description: "Restore default game settings"; Flags: unchecked;
 
 
 [Icons]
-Name: "{group}\Graal Reborn"; Filename:"{app}\Client\GLauncher.exe"; Components: top\baseclient; Tasks: startmenu
-Name: "{group}\Graal Reborn"; Filename:"{app}\Gonstruct\Gonstruct.exe"; Components: top\gonstruct; Tasks: startmenu
-Name: "{group}\Graal Reborn"; Filename:"{app}\RemoteControl3\RemoteControl3.exe"; Components: top\gonstruct; Tasks: startmenu
+Name: "{group}\OpenGraal Launcher"; Filename:"{app}\Client\GLauncher.exe"; Components: top\baseclient; Tasks: startmenu
+Name: "{group}\Gonstruct"; Filename:"{app}\Gonstruct\bin\Gonstruct.exe"; Components: top\gonstruct; Tasks: startmenu
+Name: "{group}\RemoteControl3"; Filename:"{app}\RemoteControl3\RemoteControl3.exe"; Components: top\gserver\rc3; Tasks: startmenu
+
+Name: "{userdesktop}\OpenGraal Launcher"; Filename:"{app}\Client\GLauncher.exe"; Components: top\baseclient; Tasks: desktop
 
 
 [Messages]
@@ -71,9 +74,9 @@ FinishedLabel=Setup has finished installing [name] on your computer. The applica
 ; Source: "6.0.3.7\"; DestDir: "{app}\Client\";
 
 Source: "6.0.3.7\ExeReplacer.exe"; DestDir: "{app}\Client\"; Components: top\baseclient;
-Source: "6.0.3.7\game_config.txt"; DestDir: "{app}\Client\"; Tasks: defaultsettings; Flags: onlyifdoesntexist
-Source: "6.0.3.7\GLauncher.dll"; DestDir: "{app}\Client\"; Components: top\baseclient; Flags: ignoreversion
-Source: "6.0.3.7\Glauncher.exe"; DestDir: "{app}\Client\"; Components: top\baseclient; Flags: ignoreversion
+Source: "6.0.3.7\game_config.txt"; DestDir: "{app}\Client\"; Tasks: defaultsettings;
+Source: "6.0.3.7\GLauncher.dll"; DestDir: "{app}\Client\"; Components: top\baseclient; Flags: ignoreversion;
+Source: "6.0.3.7\Glauncher.exe"; DestDir: "{app}\Client\"; Components: top\baseclient; Flags: ignoreversion;
 Source: "6.0.3.7\OG_Graal.exe"; DestDir: "{app}\Client\"; Components: top\baseclient;
 Source: "6.0.3.7\open sans.ttf"; DestDir: "{app}\Client\"; Components: top\baseclient;
 Source: "6.0.3.7\tempsitc.ttf"; DestDir: "{app}\Client\"; Components: top\baseclient;
@@ -102,14 +105,45 @@ Source: "6.0.3.7\translations\*"; DestDir: "{app}\Client\translations\"; Compone
 Source: "Gonstruct\changelog.txt"; DestDir: "{app}\Gonstruct\"; Components: top\gonstruct;
 Source: "Gonstruct\readme.html"; DestDir: "{app}\Gonstruct\"; Components: top\gonstruct;
 
-; Runs the batch file provided by the master branch of the Gonstruct repo
-; This bat will run two exes that generate configuration files for handling file extensions in Gonstruct and drop them in the ..\etc\gtk-2.0\ folder
-; https://github.com/fry/graal-gonstruct/blob/master/win/querymodules.bat
-; Peruse the above repo if you don't trust it. It's all open source materials though, so I'm leaving it in. 
-Source: "Gonstruct\bin\*"; DestDir: "{app}\Gonstruct\bin\"; Excludes: "gdk-pixbuf-query-loaders.exe, gtk-query-immodules-2.0.exe, querymodules.bat"; Components: top\gonstruct;
+; Explictly calls out the .dlls
+; This was how the .iss was made in the repo, so I just adapted it. 
+Source: "Gonstruct\bin\iconv.dll"; DestDir:"{app}\Gonstruct\bin"; Components: top\gonstruct;
+Source: "Gonstruct\bin\intl.dll"; DestDir:"{app}\Gonstruct\bin"; Components: top\gonstruct;
+Source: "Gonstruct\bin\jpeg62.dll"; DestDir:"{app}\Gonstruct\bin"; Components: top\gonstruct;
+Source: "Gonstruct\bin\libatk-1.0-0.dll"; DestDir:"{app}\Gonstruct\bin"; Components: top\gonstruct;
+Source: "Gonstruct\bin\libatkmm-1.6-1.dll"; DestDir:"{app}\Gonstruct\bin"; Components: top\gonstruct;
+Source: "Gonstruct\bin\libcairo-2.dll"; DestDir:"{app}\Gonstruct\bin"; Components: top\gonstruct;
+Source: "Gonstruct\bin\libcairomm-1.0-1.dll"; DestDir:"{app}\Gonstruct\bin"; Components: top\gonstruct;
+Source: "Gonstruct\bin\libgdk-win32-2.0-0.dll"; DestDir:"{app}\Gonstruct\bin"; Components: top\gonstruct;
+Source: "Gonstruct\bin\libgdkmm-2.4-1.dll"; DestDir:"{app}\Gonstruct\bin"; Components: top\gonstruct;
+Source: "Gonstruct\bin\libgdk_pixbuf-2.0-0.dll"; DestDir:"{app}\Gonstruct\bin"; Components: top\gonstruct;
+Source: "Gonstruct\bin\libgio-2.0-0.dll"; DestDir:"{app}\Gonstruct\bin"; Components: top\gonstruct;
+Source: "Gonstruct\bin\libglademm-2.4-1.dll"; DestDir:"{app}\Gonstruct\bin"; Components: top\gonstruct;
+Source: "Gonstruct\bin\libglib-2.0-0.dll"; DestDir:"{app}\Gonstruct\bin"; Components: top\gonstruct;
+Source: "Gonstruct\bin\libglibmm-2.4-1.dll"; DestDir:"{app}\Gonstruct\bin"; Components: top\gonstruct;
+Source: "Gonstruct\bin\libgmodule-2.0-0.dll"; DestDir:"{app}\Gonstruct\bin"; Components: top\gonstruct;
+Source: "Gonstruct\bin\libgobject-2.0-0.dll"; DestDir:"{app}\Gonstruct\bin"; Components: top\gonstruct;
+Source: "Gonstruct\bin\libgthread-2.0-0.dll"; DestDir:"{app}\Gonstruct\bin"; Components: top\gonstruct;
+Source: "Gonstruct\bin\libgtk-win32-2.0-0.dll"; DestDir:"{app}\Gonstruct\bin"; Components: top\gonstruct;
+Source: "Gonstruct\bin\libgtkmm-2.4-1.dll"; DestDir:"{app}\Gonstruct\bin"; Components: top\gonstruct;
+Source: "Gonstruct\bin\libpango-1.0-0.dll"; DestDir:"{app}\Gonstruct\bin"; Components: top\gonstruct;
+Source: "Gonstruct\bin\libpangocairo-1.0-0.dll"; DestDir:"{app}\Gonstruct\bin"; Components: top\gonstruct;
+Source: "Gonstruct\bin\libpangoft2-1.0-0.dll"; DestDir:"{app}\Gonstruct\bin"; Components: top\gonstruct;
+Source: "Gonstruct\bin\libpangomm-1.4-1.dll"; DestDir:"{app}\Gonstruct\bin"; Components: top\gonstruct;
+Source: "Gonstruct\bin\libpangowin32-1.0-0.dll"; DestDir:"{app}\Gonstruct\bin"; Components: top\gonstruct;
+Source: "Gonstruct\bin\libpng12-0.dll"; DestDir:"{app}\Gonstruct\bin"; Components: top\gonstruct;
+Source: "Gonstruct\bin\libsigc-2.0-0.dll"; DestDir:"{app}\Gonstruct\bin"; Components: top\gonstruct;
+Source: "Gonstruct\bin\libtiff3.dll"; DestDir:"{app}\Gonstruct\bin"; Components: top\gonstruct;
+Source: "Gonstruct\bin\libxml2.dll"; DestDir:"{app}\Gonstruct\bin"; Components: top\gonstruct;
+Source: "Gonstruct\bin\zlib1.dll"; DestDir:"{app}\Gonstruct\bin"; Components: top\gonstruct;
+Source: "Gonstruct\bin\libgiomm-2.4-1.dll"; DestDir:"{app}\Gonstruct\bin"; Components: top\gonstruct;
+Source: "Gonstruct\bin\libgtksourceview-2.0-0.dll"; DestDir: "{app}\Gonstruct\bin"; Components: top\gonstruct;
+Source: "Gonstruct\bin\libgtkgl-2.0-1.dll"; DestDir:"{app}\Gonstruct\bin"; Components: top\gonstruct;
+
+Source: "Gonstruct\bin\gonstruct.exe"; DestDir: "{app}\Gonstruct\bin"; Components: top\gonstruct;
+
 Source: "Gonstruct\bin\gdk-pixbuf-query-loaders.exe"; DestDir: "{app}\Gonstruct\bin\"; Flags: deleteafterinstall; Components: top\gonstruct;
 Source: "Gonstruct\bin\gtk-query-immodules-2.0.exe"; DestDir: "{app}\Gonstruct\bin\"; Flags: deleteafterinstall; Components: top\gonstruct;
-Source: "Gonstruct\bin\querymodules.bat"; DestDir: "{app}\Gonstruct\bin\"; Flags: deleteafterinstall; Components: top\gonstruct;
 
 Source: "Gonstruct\etc\gtk-2.0\gtkrc"; DestDir: "{app}\Gonstruct\etc\gtk-2.0\"; Components: top\gonstruct;
 
@@ -123,65 +157,65 @@ Source: "Gonstruct\share\gtksourceview-2.0\styles\*"; DestDir: "{app}\Gonstruct\
 ; Repo: https://github.com/xtjoeytx/GServer-v2
 ; Source: "gs2emu-3.0.5-beta\"; DestDir: "{app}\gs2emu"; Components: top\gserver
 
-Source: "gs2emu-3.0.5-beta\changelog.txt"; DestDir: "{app}\GServer-gs2emu\"; Components: top\gserver
-Source: "gs2emu-3.0.5-beta\GS2Emu.exe"; DestDir: "{app}\GServer-gs2emu\"; Components: top\gserver
-Source: "gs2emu-3.0.5-beta\icudtl.dat"; DestDir: "{app}\GServer-gs2emu\"; Components: top\gserver
-Source: "gs2emu-3.0.5-beta\icui18n.dll"; DestDir: "{app}\GServer-gs2emu\"; Components: top\gserver
-Source: "gs2emu-3.0.5-beta\icuuc.dll"; DestDir: "{app}\GServer-gs2emu\"; Components: top\gserver
-Source: "gs2emu-3.0.5-beta\readme.txt"; DestDir: "{app}\GServer-gs2emu\"; Components: top\gserver
-Source: "gs2emu-3.0.5-beta\servers.txt"; DestDir: "{app}\GServer-gs2emu\"; Components: top\gserver; Flags: onlyifdoesntexist
-Source: "gs2emu-3.0.5-beta\v8.dll"; DestDir: "{app}\GServer-gs2emu\"; Components: top\gserver
-Source: "gs2emu-3.0.5-beta\v8_libbase.dll"; DestDir: "{app}\GServer-gs2emu\"; Components: top\gserver
-Source: "gs2emu-3.0.5-beta\v8_libplatform.dll"; DestDir: "{app}\GServer-gs2emu\"; Components: top\gserver
-Source: "gs2emu-3.0.5-beta\zlib.dll"; DestDir: "{app}\GServer-gs2emu\"; Components: top\gserver
+Source: "gs2emu-3.0.5-beta\changelog.txt"; DestDir: "{app}\GServer-gs2emu\"; Components: top\gserver;
+Source: "gs2emu-3.0.5-beta\GS2Emu.exe"; DestDir: "{app}\GServer-gs2emu\"; Components: top\gserver;
+Source: "gs2emu-3.0.5-beta\icudtl.dat"; DestDir: "{app}\GServer-gs2emu\"; Components: top\gserver;
+Source: "gs2emu-3.0.5-beta\icui18n.dll"; DestDir: "{app}\GServer-gs2emu\"; Components: top\gserver;
+Source: "gs2emu-3.0.5-beta\icuuc.dll"; DestDir: "{app}\GServer-gs2emu\"; Components: top\gserver;
+Source: "gs2emu-3.0.5-beta\readme.txt"; DestDir: "{app}\GServer-gs2emu\"; Components: top\gserver;
+Source: "gs2emu-3.0.5-beta\servers.txt"; DestDir: "{app}\GServer-gs2emu\"; Components: top\gserver; Flags: onlyifdoesntexist;
+Source: "gs2emu-3.0.5-beta\v8.dll"; DestDir: "{app}\GServer-gs2emu\"; Components: top\gserver;
+Source: "gs2emu-3.0.5-beta\v8_libbase.dll"; DestDir: "{app}\GServer-gs2emu\"; Components: top\gserver;
+Source: "gs2emu-3.0.5-beta\v8_libplatform.dll"; DestDir: "{app}\GServer-gs2emu\"; Components: top\gserver;
+Source: "gs2emu-3.0.5-beta\zlib.dll"; DestDir: "{app}\GServer-gs2emu\"; Components: top\gserver;
 
-Source: "gs2emu-3.0.5-beta\docs\npcserver.txt"; DestDir: "{app}\GServer-gs2emu\docs\"; Components: top\gserver
+Source: "gs2emu-3.0.5-beta\docs\npcserver.txt"; DestDir: "{app}\GServer-gs2emu\docs\"; Components: top\gserver;
 
 ; Generate files for the default server
 ; I guess this could mess people up if they're building their server out of the default folder
 ; but really now, who would be silly enough to do that? If you raised your hand, please move your server. It's just good hygiene. 
-Source: "gs2emu-3.0.5-beta\servers\default\accounts\defaultaccount.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\accounts\"; Flags: onlyifdoesntexist; Components: top\gserver
-Source: "gs2emu-3.0.5-beta\servers\default\accounts\YOURACCOUNT.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\accounts\"; Flags: onlyifdoesntexist; Components: top\gserver
+Source: "gs2emu-3.0.5-beta\servers\default\accounts\defaultaccount.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\accounts\"; Flags: onlyifdoesntexist; Components: top\gserver;
+Source: "gs2emu-3.0.5-beta\servers\default\accounts\YOURACCOUNT.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\accounts\"; Flags: onlyifdoesntexist; Components: top\gserver;
 
-Source: "gs2emu-3.0.5-beta\servers\default\config\adminconfig.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\config\"; Flags: onlyifdoesntexist; Components: top\gserver
-Source: "gs2emu-3.0.5-beta\servers\default\config\allowedversions.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\config\"; Flags: onlyifdoesntexist; Components: top\gserver
-Source: "gs2emu-3.0.5-beta\servers\default\config\foldersconfig.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\config\"; Flags: onlyifdoesntexist; Components: top\gserver
-Source: "gs2emu-3.0.5-beta\servers\default\config\ipbans.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\config\"; Flags: onlyifdoesntexist; Components: top\gserver
-Source: "gs2emu-3.0.5-beta\servers\default\config\rchelp.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\config\"; Flags: onlyifdoesntexist; Components: top\gserver
-Source: "gs2emu-3.0.5-beta\servers\default\config\rcmessage.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\config\"; Flags: onlyifdoesntexist; Components: top\gserver
-Source: "gs2emu-3.0.5-beta\servers\default\config\rules.example.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\config\"; Flags: onlyifdoesntexist; Components: top\gserver
-Source: "gs2emu-3.0.5-beta\servers\default\config\rules.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\config\"; Flags: onlyifdoesntexist; Components: top\gserver
-Source: "gs2emu-3.0.5-beta\servers\default\config\servermessage.html"; DestDir: "{app}\GServer-gs2emu\servers\default\config\"; Flags: onlyifdoesntexist; Components: top\gserver
-Source: "gs2emu-3.0.5-beta\servers\default\config\serveroptions.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\config\"; Flags: onlyifdoesntexist; Components: top\gserver
+Source: "gs2emu-3.0.5-beta\servers\default\config\adminconfig.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\config\"; Flags: onlyifdoesntexist; Components: top\gserver;
+Source: "gs2emu-3.0.5-beta\servers\default\config\allowedversions.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\config\"; Flags: onlyifdoesntexist; Components: top\gserver;
+Source: "gs2emu-3.0.5-beta\servers\default\config\foldersconfig.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\config\"; Flags: onlyifdoesntexist; Components: top\gserver;
+Source: "gs2emu-3.0.5-beta\servers\default\config\ipbans.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\config\"; Flags: onlyifdoesntexist; Components: top\gserver;
+Source: "gs2emu-3.0.5-beta\servers\default\config\rchelp.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\config\"; Flags: onlyifdoesntexist; Components: top\gserver;
+Source: "gs2emu-3.0.5-beta\servers\default\config\rcmessage.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\config\"; Flags: onlyifdoesntexist; Components: top\gserver;
+Source: "gs2emu-3.0.5-beta\servers\default\config\rules.example.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\config\"; Flags: onlyifdoesntexist; Components: top\gserver;
+Source: "gs2emu-3.0.5-beta\servers\default\config\rules.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\config\"; Flags: onlyifdoesntexist; Components: top\gserver;
+Source: "gs2emu-3.0.5-beta\servers\default\config\servermessage.html"; DestDir: "{app}\GServer-gs2emu\servers\default\config\"; Flags: onlyifdoesntexist; Components: top\gserver;
+Source: "gs2emu-3.0.5-beta\servers\default\config\serveroptions.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\config\"; Flags: onlyifdoesntexist; Components: top\gserver;
 
-Source: "gs2emu-3.0.5-beta\servers\default\documents\docu_wordfilter.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\documents\"; Flags: onlyifdoesntexist; Components: top\gserver
-Source: "gs2emu-3.0.5-beta\servers\default\documents\rules.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\documents\"; Flags: onlyifdoesntexist; Components: top\gserver
+Source: "gs2emu-3.0.5-beta\servers\default\documents\docu_wordfilter.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\documents\"; Flags: onlyifdoesntexist; Components: top\gserver;
+Source: "gs2emu-3.0.5-beta\servers\default\documents\rules.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\documents\"; Flags: onlyifdoesntexist; Components: top\gserver;
 
-Source: "gs2emu-3.0.5-beta\servers\default\execscripts\readme.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\execscripts\"; Flags: onlyifdoesntexist; Components: top\gserver
+Source: "gs2emu-3.0.5-beta\servers\default\execscripts\readme.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\execscripts\"; Flags: onlyifdoesntexist; Components: top\gserver;
 
-Source: "gs2emu-3.0.5-beta\servers\default\guilds\guildExample.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\guilds\"; Flags: onlyifdoesntexist; Components: top\gserver
+Source: "gs2emu-3.0.5-beta\servers\default\guilds\guildExample.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\guilds\"; Flags: onlyifdoesntexist; Components: top\gserver;
 
-Source: "gs2emu-3.0.5-beta\servers\default\logs\npclog.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\logs\"; Flags: onlyifdoesntexist; Components: top\gserver
-Source: "gs2emu-3.0.5-beta\servers\default\logs\rclog.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\logs\"; Flags: onlyifdoesntexist; Components: top\gserver
-Source: "gs2emu-3.0.5-beta\servers\default\logs\scriptlog.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\logs\"; Flags: onlyifdoesntexist; Components: top\gserver
-Source: "gs2emu-3.0.5-beta\servers\default\logs\serverlog.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\logs\"; Flags: onlyifdoesntexist; Components: top\gserver
+Source: "gs2emu-3.0.5-beta\servers\default\logs\npclog.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\logs\"; Flags: onlyifdoesntexist; Components: top\gserver;
+Source: "gs2emu-3.0.5-beta\servers\default\logs\rclog.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\logs\"; Flags: onlyifdoesntexist; Components: top\gserver;
+Source: "gs2emu-3.0.5-beta\servers\default\logs\scriptlog.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\logs\"; Flags: onlyifdoesntexist; Components: top\gserver;
+Source: "gs2emu-3.0.5-beta\servers\default\logs\serverlog.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\logs\"; Flags: onlyifdoesntexist; Components: top\gserver;
 
-Source: "gs2emu-3.0.5-beta\servers\default\npcs\npcControl-NPC.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\npcs\"; Flags: onlyifdoesntexist; Components: top\gserver
+Source: "gs2emu-3.0.5-beta\servers\default\npcs\npcControl-NPC.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\npcs\"; Flags: onlyifdoesntexist; Components: top\gserver;
 
-Source: "gs2emu-3.0.5-beta\servers\default\translations\deutsch.po"; DestDir: "{app}\GServer-gs2emu\servers\default\translations\"; Flags: onlyifdoesntexist; Components: top\gserver
-Source: "gs2emu-3.0.5-beta\servers\default\translations\english.po"; DestDir: "{app}\GServer-gs2emu\servers\default\translations\"; Flags: onlyifdoesntexist; Components: top\gserver
-Source: "gs2emu-3.0.5-beta\servers\default\translations\italiano.po"; DestDir: "{app}\GServer-gs2emu\servers\default\translations\"; Flags: onlyifdoesntexist; Components: top\gserver
-Source: "gs2emu-3.0.5-beta\servers\default\translations\nederlands.po"; DestDir: "{app}\GServer-gs2emu\servers\default\translations\"; Flags: onlyifdoesntexist; Components: top\gserver
-Source: "gs2emu-3.0.5-beta\servers\default\translations\norsk.po"; DestDir: "{app}\GServer-gs2emu\servers\default\translations\"; Flags: onlyifdoesntexist; Components: top\gserver
-Source: "gs2emu-3.0.5-beta\servers\default\translations\svenska.po"; DestDir: "{app}\GServer-gs2emu\servers\default\translations\"; Flags: onlyifdoesntexist; Components: top\gserver
+Source: "gs2emu-3.0.5-beta\servers\default\translations\deutsch.po"; DestDir: "{app}\GServer-gs2emu\servers\default\translations\"; Flags: onlyifdoesntexist; Components: top\gserver;
+Source: "gs2emu-3.0.5-beta\servers\default\translations\english.po"; DestDir: "{app}\GServer-gs2emu\servers\default\translations\"; Flags: onlyifdoesntexist; Components: top\gserver;
+Source: "gs2emu-3.0.5-beta\servers\default\translations\italiano.po"; DestDir: "{app}\GServer-gs2emu\servers\default\translations\"; Flags: onlyifdoesntexist; Components: top\gserver;
+Source: "gs2emu-3.0.5-beta\servers\default\translations\nederlands.po"; DestDir: "{app}\GServer-gs2emu\servers\default\translations\"; Flags: onlyifdoesntexist; Components: top\gserver;
+Source: "gs2emu-3.0.5-beta\servers\default\translations\norsk.po"; DestDir: "{app}\GServer-gs2emu\servers\default\translations\"; Flags: onlyifdoesntexist; Components: top\gserver;
+Source: "gs2emu-3.0.5-beta\servers\default\translations\svenska.po"; DestDir: "{app}\GServer-gs2emu\servers\default\translations\"; Flags: onlyifdoesntexist; Components: top\gserver;
 
-Source: "gs2emu-3.0.5-beta\servers\default\weapons\weapon-gr_movement.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\weapons\"; Flags: onlyifdoesntexist; Components: top\gserver
+Source: "gs2emu-3.0.5-beta\servers\default\weapons\weapon-gr_movement.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\weapons\"; Flags: onlyifdoesntexist; Components: top\gserver;
 
-Source: "gs2emu-3.0.5-beta\servers\default\world\onlinestartlocal.nw"; DestDir: "{app}\GServer-gs2emu\servers\default\world\"; Flags: onlyifdoesntexist; Components: top\gserver
-Source: "gs2emu-3.0.5-beta\servers\default\world\readme.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\world\"; Flags: onlyifdoesntexist; Components: top\gserver
+Source: "gs2emu-3.0.5-beta\servers\default\world\onlinestartlocal.nw"; DestDir: "{app}\GServer-gs2emu\servers\default\world\"; Flags: onlyifdoesntexist; Components: top\gserver;
+Source: "gs2emu-3.0.5-beta\servers\default\world\readme.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\world\"; Flags: onlyifdoesntexist; Components: top\gserver;
 
-Source: "gs2emu-3.0.5-beta\servers\default\bootstrap.js"; DestDir: "{app}\GServer-gs2emu\servers\default\"; Flags: onlyifdoesntexist; Components: top\gserver
-Source: "gs2emu-3.0.5-beta\servers\default\serverflags.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\"; Flags: onlyifdoesntexist; Components: top\gserver
+Source: "gs2emu-3.0.5-beta\servers\default\bootstrap.js"; DestDir: "{app}\GServer-gs2emu\servers\default\"; Flags: onlyifdoesntexist; Components: top\gserver;
+Source: "gs2emu-3.0.5-beta\servers\default\serverflags.txt"; DestDir: "{app}\GServer-gs2emu\servers\default\"; Flags: onlyifdoesntexist; Components: top\gserver;
 
 ; Remote Control 3, an application that lets you interact with your server remotely
 ; Repo: ???
@@ -210,8 +244,23 @@ Name: "{app}\GServer-gs2emu\servers\default\world\swords\"
 
 
 [Run]
-FileName: "{app}\Gonstruct\bin\querymodules.bat"; Components: top\gonstruct; Flags: nowait shellexec runhidden skipifsilent skipifdoesntexist
-FileName: "{app}\Client\GLauncher.exe"; Description: "Run the OpenGraal launcher"; Components: top\baseclient; Flags: postinstall;
+ ; If we have an installer, we might as well not be using a bat for this. This is what the original installer for Gonstruct was using:
+ ; https://github.com/fry/graal-gonstruct/blob/master/win/querymodules.bat 
+
+ ; Instead we will run the two exes that generate configuration files for handling file extensions in Gonstruct and drop them in the ..\etc\gtk-2.0\ folder
+ ; This is the documentation for the modules 
+ ; https://linux.die.net/man/1/gdk-pixbuf-query-loaders
+ ; https://linux.die.net/man/1/gtk-query-immodules-2.0
+
+Filename: "{cmd}"; Parameters: "/c """"{app}\Gonstruct\bin\gdk-pixbuf-query-loaders.exe"" > ""{app}\Gonstruct\etc\gtk-2.0\gdk-pixbuf.loaders"""""; \
+ Flags: runhidden; \
+ StatusMsg: "Querying modules...";  
+Filename: "{cmd}"; Parameters: "/c """"{app}\Gonstruct\bin\gtk-query-immodules-2.0.exe"" > ""{app}\Gonstruct\etc\gtk-2.0\gtk.immodules"""""; \
+ Flags: runhidden; \
+ StatusMsg: "Querying modules..."; 
+
+FileName: "{app}\Client\GLauncher.exe"; Description: "Run the OpenGraal launcher"; Components: top\baseclient; Flags: postinstall nowait;
+FileName: "{app}\Client\Create an account.url"; Description: "Open the URL for creating an account"; Components: top\baseclient; Flags: postinstall nowait shellexec unchecked;
 
 [UninstallDelete]
 Type: files; Name: "{app}\Gonstruct\etc\gtk-2.0\gdk-pixbuf.loaders"
